@@ -69,8 +69,19 @@ export default {
           keyword2: this.keyword.toUpperCase()
         }
       }
-      
-      this.$router.push(location)
+
+      /* 
+      router.push(location, onComplete?, onAbort?)
+      router.push(location).then(onComplete).catch(onAbort)
+      */
+
+     this.$router.push(location)
+
+      // 解决重复跳转路由的错误:
+      // 方法一: 传入成功的回调函数函数
+      // console.log(this.$router.push(location, () => {}))
+      // 方法: catch处理错误的promise
+      // console.log(this.$router.push(location)).catch(() => {})
 
     }
   }
