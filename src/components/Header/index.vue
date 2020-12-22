@@ -32,10 +32,10 @@
         </router-link>
       </h1>
       <div class="searchArea">
-        <form action="###" class="searchForm">
+        <form action="/xxx" class="searchForm">
           <input type="text" id="autocomplete" class="input-error input-xxlarge" 
-            v-model="keyword"/>
-          <button class="sui-btn btn-xlarge btn-danger" type="button" @click="search">搜索</button>
+            v-model.trim="keyword"/>
+          <button class="sui-btn btn-xlarge btn-danger" @click.prevent="search">搜索</button>
         </form>
       </div>
     </div>
@@ -56,17 +56,21 @@ export default {
     search () {
       // 编程式路由导航
       // this.$router.push(`/search/${this.keyword}`)
-      
-      this.$router.push({
+
+      const location = {
         name: 'search',
-        params: {
+      }
+      // 只有数据时, 才携带params参数
+      if (this.keyword) {
+        location.params = { // 路由必须配置name
           keyword: this.keyword
         },
-        query: {
+        location.query = {
           keyword2: this.keyword.toUpperCase()
         }
-      })
-
+      }
+      
+      this.$router.push(location)
 
     }
   }

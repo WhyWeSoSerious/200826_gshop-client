@@ -13,10 +13,13 @@ export default [
   },
   {
     name: 'search',
-    path: '/search/:keyword',
-    component: Search
+    path: '/search/:keyword?',
+    component: Search,
+    // props: true, // 只映射params参数
+    props: (route) => ({keyword3: route.params.keyword, keyword4: route.query.keyword2}) 
   },
   {
+    name: 'register',
     path: '/register',
     component: Register
   },
