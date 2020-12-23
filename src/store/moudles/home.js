@@ -1,14 +1,45 @@
 /* 
 管理首页相关数据的vuex子模块
 */
+import {reqCategoryList} from '@/api'
 
 const state = {
   categoryList: [],
   xxx: 'abc',
   yyy: 123
 }
-const mutations = {}
-const actions = {}
+const mutations = {
+  aaa (state) { // state是当前模块的
+
+  },
+
+  /* 
+  接收保存分类列表
+  */
+  RECEIVE_CATEGORY_LIST (state, categoryList) {
+    state.categoryList = categoryList.splice(0, 15)
+  }
+}
+
+const actions = {
+  bbb ({commit}) { // commit触发是所有匹配的mutation, 可能是其它模块或总的mutation
+    commit('aaa')
+  },
+
+  /* 
+  获取三级分类列表的异步action
+  */
+  async getCategoryList ({commit}) {
+    // 发异步ajax请求(调用接口请求函数)
+    const result = await reqCategoryList()
+    // 如果请求成功了, 得到数据提交给mutation
+    if (result.code===200) {
+      const categoryList = result.data
+      commit('RECEIVE_CATEGORY_LIST', categoryList)
+    }
+  }
+
+}
 const getters = {}
 
 export default {

@@ -10,7 +10,11 @@ import user from './moudles/user'
 Vue.use(Vuex)
 
 const mutations = {
-  xxx (state) {
+  xxx (state) { // state是总的状态
+
+  },
+
+  aaa (state) {
 
   }
 }
@@ -23,7 +27,7 @@ const actions = {
 
 const getters = {
   zzz (state) {
-
+    return state.home.xxx.length
   }
 }
 
@@ -43,7 +47,9 @@ export default new Vuex.Store({
 vuex多模块编程的总状态结构: 
 {
   home: {
-    categoryList: []
+    categoryList: [],
+    xxx: 'abc',
+    yyy: 123
   },
 
   user: {

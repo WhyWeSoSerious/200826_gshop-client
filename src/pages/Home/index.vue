@@ -21,6 +21,7 @@ import Like from './Like/Like.vue'
 import Floor from './Floor/Floor.vue'
 import Brand from './Brand/Brand.vue'
 
+
 export default {
   name: 'Home',
 
