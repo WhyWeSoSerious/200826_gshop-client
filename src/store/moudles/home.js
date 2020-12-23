@@ -5,14 +5,8 @@ import {reqCategoryList} from '@/api'
 
 const state = {
   categoryList: [],
-  xxx: 'abc',
-  yyy: 123
 }
 const mutations = {
-  aaa (state) { // state是当前模块的
-
-  },
-
   /* 
   接收保存分类列表
   */
@@ -22,9 +16,6 @@ const mutations = {
 }
 
 const actions = {
-  bbb ({commit}) { // commit触发是所有匹配的mutation, 可能是其它模块或总的mutation
-    commit('aaa')
-  },
 
   /* 
   获取三级分类列表的异步action
