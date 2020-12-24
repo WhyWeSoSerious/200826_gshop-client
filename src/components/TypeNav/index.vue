@@ -74,6 +74,7 @@ export default {
       // 取出data自定义属性值
        const {categoryname, category1id, category2id, category3id} = target.dataset
       
+      // 如果点击的是分类项
       // if (target.tagName.toUpperCase()==='A') {
       if (categoryname) {
         // 准备query参数
