@@ -85,7 +85,7 @@ export default {
       // isShowFirst: false, // 是否显示一级列表
       isShowFirst: path==='/',
       currentIndex: -2 // 需要显示子列表的分类项下标
-    };
+    }
   },
 
   beforeCreate() {
