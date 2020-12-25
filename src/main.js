@@ -4,7 +4,7 @@ import router from './router'
 import store from './store'
 import TypeNav from "./components/TypeNav"
 
-import 'swiper/css/swiper.css' // 所有组件都能用上这个样式
+import './plugins/swiper' // 加载swiper的配置
 
 // 浏览器控制台不显示非生产环境打包的提示
 Vue.config.productionTip = false
