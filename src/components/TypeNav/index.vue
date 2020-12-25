@@ -1,7 +1,54 @@
 <template>
   <div class="type-nav">
-    <div class="container">
-      <h2 class="all">全部商品分类</h2>
+    <div class="container" @mouseleave>
+      <div @mouseleave="currentIndex=-1">
+        <h2 class="all">全部商品分类</h2>
+        <div class="sort">
+          <div class="all-sort-list2" @click="toSearch">
+            <div
+              class="item"
+              v-for="(c1, index) in categoryList"
+              :key="c1.categoryId"
+              :class="{active: currentIndex===index}"
+              @mouseenter="showSubList(index)"
+            >
+              <h3>
+                <a
+                  href="javascript:"
+                  :data-categoryName="c1.categoryName"
+                  :data-category1Id="c1.categoryId"
+                >{{c1.categoryName}}</a>
+                <!-- <a href="javascript:" @click="$router.push(`/search?categoryName=${c1.categoryName}&category1Id=${c1.categoryId}`)">{{c1.categoryName}}</a> -->
+                <!-- <router-link :to="`/search?categoryName=${c1.categoryName}&category1Id=${c1.categoryId}`">{{c1.categoryName}}</router-link> -->
+              </h3>
+              <div class="item-list clearfix">
+                <div class="subitem">
+                  <dl class="fore" v-for="c2 in c1.categoryChild" :key="c2.categoryId">
+                    <dt>
+                      <a
+                        href="javascript:"
+                        :data-categoryName="c2.categoryName"
+                        :data-category2Id="c2.categoryId"
+                      >{{c2.categoryName}}</a>
+                      <!-- <router-link :to="`/search?categoryName=${c2.categoryName}&category2Id=${c2.categoryId}`">{{c2.categoryName}}</router-link> -->
+                    </dt>
+                    <dd>
+                      <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
+                        <a
+                          href="javascript:"
+                          :data-categoryName="c3.categoryName"
+                          :data-category3Id="c3.categoryId"
+                        >{{c3.categoryName}}</a>
+                        <!-- <router-link :to="`/search?categoryName=${c3.categoryName}&category3Id=${c3.categoryId}`">{{c3.categoryName}}</router-link> -->
+                      </em>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <nav class="nav">
         <a href="###">服装城</a>
         <a href="###">美妆馆</a>
@@ -12,33 +59,6 @@
         <a href="###">有趣</a>
         <a href="###">秒杀</a>
       </nav>
-      <div class="sort">
-        <div class="all-sort-list2" @click="toSearch">
-          <div class="item" v-for="(c1, index) in categoryList" :key="c1.categoryId">
-            <h3>
-              <a href="javascript:" :data-categoryName="c1.categoryName" :data-category1Id="c1.categoryId">{{c1.categoryName}}</a>
-              <!-- <a href="javascript:" @click="$router.push(`/search?categoryName=${c1.categoryName}&category1Id=${c1.categoryId}`)">{{c1.categoryName}}</a> -->
-              <!-- <router-link :to="`/search?categoryName=${c1.categoryName}&category1Id=${c1.categoryId}`">{{c1.categoryName}}</router-link> -->
-            </h3>
-            <div class="item-list clearfix">
-              <div class="subitem">
-                <dl class="fore" v-for="c2 in c1.categoryChild" :key="c2.categoryId">
-                  <dt>
-                    <a href="javascript:" :data-categoryName="c2.categoryName" :data-category2Id="c2.categoryId">{{c2.categoryName}}</a>
-                    <!-- <router-link :to="`/search?categoryName=${c2.categoryName}&category2Id=${c2.categoryId}`">{{c2.categoryName}}</router-link> -->
-                  </dt>
-                  <dd>
-                    <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
-                      <a href="javascript:" :data-categoryName="c3.categoryName" :data-category3Id="c3.categoryId">{{c3.categoryName}}</a>
-                      <!-- <router-link :to="`/search?categoryName=${c3.categoryName}&category3Id=${c3.categoryId}`">{{c3.categoryName}}</router-link> -->
-                    </em>
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -49,10 +69,18 @@
 2. store.state / mapState()读取vuex的state数据  ==> 数据从state到组件的computed
 3. 在模板中动态显示
 */
-import {mapState} from 'vuex'
+import { mapState } from "vuex";
+// import _ from 'lodash' // 打包整个库  ==> 太大了, 4M
+import throttle from "lodash/throttle" // 只引入需要的模块   ==> 减小打包文件  2.7M
 
 export default {
   name: "TypeNav",
+
+  data() {
+    return {
+      currentIndex: -1 // 需要显示子列表的分类项下标
+    };
+  },
 
   computed: {
     // categoryList () {
@@ -61,19 +89,36 @@ export default {
     // ...mapState(['categoryList']) // 不可以
     // ...mapState({categoryList: 'home.categoryList'})  // 不可以
     ...mapState({
-       categoryList: state => state.home.categoryList, // 函数接收的是总状态, 返回值作为计算属性值
+      categoryList: state => state.home.categoryList // 函数接收的是总状态, 返回值作为计算属性值
     })
-
   },
 
   methods: {
-    toSearch (event) {
-      const target = event.target
+    /* 
+    显示指定下标的子分类列表
+    */
+    // showSubList: _.throttle( (index) => { // 不可以, 原因在于箭头函数没有自己的this, 且不能通过bind来指定特定this
+    // showSubList: _.throttle(function (index) { // 这个事件监听回调函数调用的频率太高
+    showSubList: throttle(function (index) { // 这个事件监听回调函数调用的频率太高
+      console.log('throttle', index)
+      this.currentIndex = index;
+    }, 200),
+
+    /* 
+    跳转到搜索
+    */
+    toSearch(event) {
+      const target = event.target;
       // alert(target.tagName)
-      console.dir(target)
+      console.dir(target);
       // 取出data自定义属性值
-       const {categoryname, category1id, category2id, category3id} = target.dataset
-      
+      const {
+        categoryname,
+        category1id,
+        category2id,
+        category3id
+      } = target.dataset;
+
       // 如果点击的是分类项
       // if (target.tagName.toUpperCase()==='A') {
       if (categoryname) {
@@ -81,19 +126,19 @@ export default {
         // categoryName=图书、音像、电子书刊&category1Id=1
         const query = {
           categoryName: categoryname
-        }
+        };
         if (category1id) {
-          query.category1Id = category1id
+          query.category1Id = category1id;
         } else if (category2id) {
-          query.category2Id = category2id
+          query.category2Id = category2id;
         } else if (category3id) {
-          query.category3Id = category3id
+          query.category3Id = category3id;
         }
         // 跳转到search
         this.$router.push({
-          name: 'search',
+          name: "search",
           query
-        })
+        });
       }
     }
   }
@@ -210,7 +255,8 @@ export default {
             }
           }
 
-          &:hover {
+          &.active {
+            background: #ccc;
             .item-list {
               display: block;
             }
