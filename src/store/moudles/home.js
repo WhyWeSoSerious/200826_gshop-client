@@ -21,6 +21,7 @@ const actions = {
   获取三级分类列表的异步action
   */
   async getCategoryList ({commit}) {
+    console.log('getCategory()')
     // 发异步ajax请求(调用接口请求函数)
     const result = await reqCategoryList()
     // 如果请求成功了, 得到数据提交给mutation
