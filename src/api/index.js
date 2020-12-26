@@ -32,6 +32,6 @@ mock接口函数
 export const reqRecommends = () => mockAjax('/recommends')
 export const reqFloors = () => mockAjax('/floors')
 
-reqFloors().then(result => {
-  console.log('result--', result)
-})
+// reqFloors().then(result => {
+//   console.log('result--', result)
+// })
