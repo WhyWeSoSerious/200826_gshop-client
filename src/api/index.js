@@ -35,3 +35,10 @@ export const reqFloors = () => mockAjax('/floors')
 // reqFloors().then(result => {
 //   console.log('result--', result)
 // })
+
+/* 
+搜索分页列表
+/api/list  POST
+
+*/
+export const reqSearch = (searchParams) => ajax.post('/list', searchParams) 

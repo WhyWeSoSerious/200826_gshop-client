@@ -193,10 +193,9 @@ export default {
         // 准备一个用于跳转的对象
         const location = {
           name: "search",
-          query,
-          params: this.$route.params // 需要携带上当前已有params参数
+          query, // {name:'tom', pwd: '123'}
+          params: this.$route.params // 需要携带上当前已有params参数  
         }
-
 
         // 跳转到search
         this.$router.push(location)

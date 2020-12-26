@@ -20,13 +20,13 @@
 import {mapState} from 'vuex'
 
 export default {
-  name: 'TodayRecommend',
+  name: "TodayRecommend",
   computed: {
     ...mapState({
       recommends: state => state.home.recommends
     })
-  }
-}
+  },
+};
 </script>
 
 <style lang="less" scoped>
