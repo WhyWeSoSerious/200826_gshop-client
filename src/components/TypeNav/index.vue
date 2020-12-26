@@ -1,6 +1,6 @@
 <template>
   <div class="type-nav">
-    <div class="container" @mouseleave>
+    <div class="container">
       <div @mouseleave="hideFirst" @mouseenter="showFirst">
         <h2 class="all">全部商品分类</h2>
         <transition name="slide">

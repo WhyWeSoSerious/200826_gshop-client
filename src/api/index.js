@@ -4,6 +4,7 @@
   函数返回的是promise对象
 */
 import ajax from './ajax'
+import mockAjax from './mockAjax'
 
 /* 
 首页三级分类
@@ -23,3 +24,14 @@ export function reqCategoryList () {
 /api/cms/banner  GET
 */
 export const reqBannerList = () => ajax('/cms/banner')
+
+
+/* 
+mock接口函数
+*/
+export const reqRecommends = () => mockAjax('/recommends')
+export const reqFloors = () => mockAjax('/floors')
+
+reqFloors().then(result => {
+  console.log('result--', result)
+})

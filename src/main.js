@@ -5,6 +5,7 @@ import store from './store'
 import TypeNav from "./components/TypeNav"
 
 import './plugins/swiper' // 加载swiper的配置
+import './mock/mockServer'
 
 // 浏览器控制台不显示非生产环境打包的提示
 Vue.config.productionTip = false
