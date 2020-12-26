@@ -11,10 +11,14 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone<i>×</i></li>
-            <li class="with-x">华为<i>×</i></li>
-            <li class="with-x">OPPO<i>×</i></li>
+            <li class="with-x" v-if="options.categoryName">
+              {{options.categoryName}}
+              <i @click="removeCategory">×</i>
+            </li>
+            <li class="with-x" v-if="options.keyword">
+              {{options.keyword}}
+              <i @click="removeKeyword">×</i>
+            </li>
           </ul>
         </div>
         <!--selector-->
@@ -118,11 +122,29 @@
   export default {
     name: 'Search',
 
-    mounted () {
-      this.$store.dispatch('getProductList', {
-        pageNo: 1,
-        pageSize: 10
-      })
+    data () {
+      return {
+        options: {
+          category1Id: '', // 一级分类ID
+          category2Id: '', // 二级分类ID
+          category3Id: '', // 三级分类ID
+          categoryName: '', // 分类名称
+          keyword: '', // 搜索关键字
+
+          props: [], // ["属性ID:属性值:属性名"]示例: ["2:6.0～6.24英寸:屏幕尺寸"]
+          trademark: '', // 品牌: "ID:品牌名称"示例: "1:苹果"
+          order: '', // 排序方式 1: 综合,2: 价格 asc: 升序,desc: 降序 示例: "1:desc"
+        
+          pageNo: 1, // 页码
+          pageSize: 10, // 每页数量
+        }
+      }
+    },
+
+    // 在created中收集参数数据到options中, 并发送搜索的请求
+    created () {
+      this.updateParams()
+      this.getShopList()
     },
 
     computed: {
@@ -132,6 +154,79 @@
       ...mapGetters(['goodsList'])
     },
 
+    watch: {
+      $route(to, from) { // 参数变化
+        this.updateParams()
+        this.getShopList()
+      }
+    },
+
+    methods: {
+
+      /* 
+      删除分类的条件
+      */
+      removeCategory () {
+        // 更新分类相关数据
+        this.options.category1Id = ''
+        this.options.category2Id = ''
+        this.options.category3Id = ''
+        this.options.categoryName = ''
+        // 重新发请求
+        // this.getShopList()
+
+        // 重新跳转到search, 不再携带删除的条件所对应的参数(query)
+        this.$router.push({
+          name: 'search',
+          // query: this.$route.query
+          params: this.$route.params
+        })
+      },
+
+      /* 
+      删除关键字的条件
+      */
+      removeKeyword () {
+        // 更新分类相关数据
+        this.options.keyword = ''
+        // 重新发请求
+        // this.getShopList()
+
+        // 重新跳转到search, 不再携带删除的条件所对应的参数(params)
+        this.$router.push({
+          name: 'search',
+          query: this.$route.query,
+          // params: this.$route.params
+        })
+      },
+
+
+      /* 
+      更新options中的参数属性
+      */
+      updateParams () {
+        // 取出参数数据
+        const {keyword} = this.$route.params
+        const {category1Id, category2Id, category3Id, categoryName} = this.$route.query
+        // 保存到options中
+        this.options = {
+          ...this.options,
+          keyword,
+          category1Id, 
+          category2Id, 
+          category3Id, 
+          categoryName
+        }
+      },
+
+      /* 
+      异步获取商品列表
+      */
+      getShopList () {
+        // 发搜索的请求
+        this.$store.dispatch('getProductList', this.options)
+      }
+    },
 
     components: {
       SearchSelector
