@@ -198,7 +198,15 @@ export default {
         }
 
         // 跳转到search
-        this.$router.push(location)
+        /* 
+        从其它页到搜索页: push()
+	      从搜索到搜索页: replace()
+        */
+       if (this.$route.name === "search") { // 当前是搜索
+         this.$router.replace(location)
+       } else {
+         this.$router.push(location)
+       }
 
         // 隐藏一级列表
         this.hideFirst()

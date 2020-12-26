@@ -142,10 +142,10 @@
     },
 
     // 在created中收集参数数据到options中, 并发送搜索的请求
-    created () {
-      this.updateParams()
-      this.getShopList()
-    },
+    // created () {
+    //   this.updateParams()
+    //   this.getShopList()
+    // },
 
     computed: {
       // ...mapState({
@@ -155,9 +155,20 @@
     },
 
     watch: {
-      $route(to, from) { // 参数变化
+      /* 
+      watch监视回调默认调用时机: 数据有变化才调用
+      如何实现初始化就调用第一次: 
+      */
+      /* $route(to, from) { // 参数变化
         this.updateParams()
         this.getShopList()
+      }, */
+      $route: {
+        handler() { // 参数变化
+          this.updateParams()
+          this.getShopList()
+        },
+        immediate: true, // 初始化立即执行第一次
       }
     },
 
@@ -176,7 +187,8 @@
         // this.getShopList()
 
         // 重新跳转到search, 不再携带删除的条件所对应的参数(query)
-        this.$router.push({
+        // this.$router.push({
+        this.$router.replace({
           name: 'search',
           // query: this.$route.query
           params: this.$route.params
@@ -193,11 +205,15 @@
         // this.getShopList()
 
         // 重新跳转到search, 不再携带删除的条件所对应的参数(params)
-        this.$router.push({
+        // this.$router.push({
+        this.$router.replace({
           name: 'search',
           query: this.$route.query,
           // params: this.$route.params
         })
+
+        // 3). 在Search中分发事件
+        this.$bus.$emit('removeKeyword')
       },
 
 

@@ -76,7 +76,15 @@ export default {
       router.push(location).then(onComplete).catch(onAbort)
       */
 
-     this.$router.push(location)
+      /* 
+      从其它页到搜索页: push()
+      从搜索到搜索页: replace()
+      */
+      if (this.$route.name === "search") { // 当前是搜索
+        this.$router.replace(location)
+      } else {
+        this.$router.push(location)
+      }
 
       // 解决重复跳转路由的错误:
       // 方法一: 传入成功的回调函数函数
@@ -85,6 +93,18 @@ export default {
       // console.log(this.$router.push(location)).catch(() => {})
 
     }
+  },
+
+  mounted () {
+    // 2). 在Header中绑定自定义事件监听, 在回调中清除数据
+    this.$bus.$on('removeKeyword', () => {
+      this.keyword = ''
+    })
+  },
+
+  // 4). 在Header组件死亡之前解绑事件监听: 在beforeDestory中
+  beforeDestroy () {
+    this.$bus.off('removeKeyword')
   }
 };
 </script>
