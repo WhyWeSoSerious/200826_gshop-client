@@ -19,10 +19,19 @@
               {{options.keyword}}
               <i @click="removeKeyword">×</i>
             </li>
+            <li class="with-x" v-if="options.trademark">
+              {{options.trademark}}
+              <i @click="removeTrademark">×</i>
+            </li>
+
+            <li class="with-x" v-for="(prop, index) in options.props" :key="prop">
+              {{prop}}
+              <i @click="removeProp(index)">×</i>
+            </li>
           </ul>
         </div>
         <!--selector-->
-        <SearchSelector />
+        <SearchSelector :setTrademark="setTrademark" @addProp="addProp"/>
 
         <!--details-->
         <div class="details clearfix">
@@ -173,6 +182,52 @@
     },
 
     methods: {
+
+      /* 
+      删除一个属性条件
+      */
+      removeProp (index) {
+        // 删除props中index的元素
+        this.options.props.splice(index, 1)
+        // 重新请求获取数据列表
+        this.getShopList()
+      },
+
+      /* 
+      添加一个属性条件
+      */
+      addProp (prop) {
+        const {props} = this.options
+        // 如果已经存在条件数组中, 不添加
+        if (props.includes(prop)) return
+        // 向props数组添加一个条件字符串 子向父通信==>vue自定义事件
+        props.push(prop)
+        // 重新请求获取数据列表
+        this.getShopList()
+      },
+
+      /* 
+      删除品牌条件
+      */
+      removeTrademark () {
+        // 重置品牌条件数据
+        this.options.trademark = ''
+        // 重新请求获取数据列表
+        this.getShopList()
+      },
+
+      /* 
+      设置品牌条件
+      */
+      setTrademark (trademark) {
+        // 如果当前品牌已经在条件中了, 直接结束
+        if (trademark===this.options.trademark) return
+        
+        // 更新options中的trademark为指定的值
+        this.options.trademark = trademark
+        // 重新请求获取数据列表
+        this.getShopList()
+      },
 
       /* 
       删除分类的条件
