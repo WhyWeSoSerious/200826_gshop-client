@@ -156,7 +156,7 @@
           keyword: '', // 搜索关键字
 
           props: [], // ["属性ID:属性值:属性名"]示例: ["2:6.0～6.24英寸:屏幕尺寸"]
-          trademark: '', // 品牌: "ID:品牌名称"示例: "1:苹果"
+          // trademark: '', // 品牌: "ID:品牌名称"示例: "1:苹果"
           order: '2:asc', // 排序方式 1: 综合,2: 价格 asc: 升序,desc: 降序 示例: "1:desc"
         
           pageNo: 1, // 页码
@@ -252,7 +252,9 @@
       */
       removeTrademark () {
         // 重置品牌条件数据
-        this.options.trademark = ''
+        // this.options.trademark = ''
+        // delete this.options.trademark  // ==> 不会导致界面
+        this.$delete(this.options, 'trademark')
         // 重新请求获取数据列表
         this.getShopList()
       },
@@ -265,9 +267,14 @@
         if (trademark===this.options.trademark) return
         
         // 更新options中的trademark为指定的值
-        this.options.trademark = trademark
+        // 向响应式对象中添加一个 property，并确保这个新 property 同样是响应式的，且触发视图更新。
+        // this.options.trademark = trademark
+        this.$set(this.options, 'trademark', trademark)
+
         // 重新请求获取数据列表
         this.getShopList()
+
+
       },
 
       /* 
