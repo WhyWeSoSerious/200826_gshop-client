@@ -104,35 +104,13 @@
               </li>
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+          <Pagination
+            :currentPage="options.pageNo"
+            :total="total"
+            :pageSize="options.pageSize"
+            :showPageNo="3"
+            @currentChange="currentChange"
+          />
         </div>
       </div>
     </div>
@@ -160,7 +138,7 @@
           order: '2:asc', // 排序方式 1: 综合,2: 价格 asc: 升序,desc: 降序 示例: "1:desc"
         
           pageNo: 1, // 页码
-          pageSize: 10, // 每页数量
+          pageSize: 3, // 每页数量
         }
       }
     },
@@ -175,7 +153,7 @@
       // ...mapState({
       //   goodsList: state => state.search.productList.goodsList || []
       // })
-      ...mapGetters(['goodsList']),
+      ...mapGetters(['goodsList', 'total']),
 
       /* 
       得到包含当前分类项标识(orderFlag)和排序方式(orderType)的数组
@@ -204,6 +182,14 @@
     },
 
     methods: {
+
+      /* 
+      当前页码发生改变的事件回调
+      */
+      currentChange (page) {
+        this.options.pageNo = page
+        this.getShopList()
+      },
 
       /* 
       设置新的排序搜索
