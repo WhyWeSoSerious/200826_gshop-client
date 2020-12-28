@@ -38,11 +38,23 @@
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <!-- order: '1:desc' -->
+                <li :class="{active: orderArr[0]==='1'}" @click="setOrder('1')">
+                  <a href="javascript:">
+                    综合
+                    <i class="iconfont" 
+                      :class="orderArr[1]==='desc' ? 'icondown' : 'iconup'"
+                      v-if="orderArr[0]==='1'"></i>
+                  </a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
+
+                <li :class="{active: orderArr[0]==='3'}" @click="setOrder('3')">
+                  <a href="javascript:">
+                    销量
+                    <i class="iconfont" 
+                      :class="orderArr[1]==='desc' ? 'icondown' : 'iconup'"
+                      v-if="orderArr[0]==='3'"></i>
+                  </a>
                 </li>
                 <li>
                   <a href="#">新品</a>
@@ -50,11 +62,14 @@
                 <li>
                   <a href="#">评价</a>
                 </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+
+                <li :class="{active: orderArr[0]==='2'}" @click="setOrder('2')">
+                  <a href="javascript:">
+                    价格
+                    <i class="iconfont" 
+                      :class="orderArr[1]==='desc' ? 'icondown' : 'iconup'"
+                      v-if="orderArr[0]==='2'"></i>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -142,7 +157,7 @@
 
           props: [], // ["属性ID:属性值:属性名"]示例: ["2:6.0～6.24英寸:屏幕尺寸"]
           trademark: '', // 品牌: "ID:品牌名称"示例: "1:苹果"
-          order: '', // 排序方式 1: 综合,2: 价格 asc: 升序,desc: 降序 示例: "1:desc"
+          order: '2:asc', // 排序方式 1: 综合,2: 价格 asc: 升序,desc: 降序 示例: "1:desc"
         
           pageNo: 1, // 页码
           pageSize: 10, // 每页数量
@@ -160,7 +175,14 @@
       // ...mapState({
       //   goodsList: state => state.search.productList.goodsList || []
       // })
-      ...mapGetters(['goodsList'])
+      ...mapGetters(['goodsList']),
+
+      /* 
+      得到包含当前分类项标识(orderFlag)和排序方式(orderType)的数组
+      */
+      orderArr () {
+        return this.options.order.split(':')
+      }
     },
 
     watch: {
@@ -182,6 +204,25 @@
     },
 
     methods: {
+
+      /* 
+      设置新的排序搜索
+      */
+      setOrder (orderFlag) {
+        // 得到当前的排序项和排序方式
+        let [flag, type] = this.orderArr
+        //   点击的是当前排序项: 只需要切换orderType
+        if (orderFlag===flag) {
+          type = type==='desc' ? 'asc' : 'desc'
+        } else {
+          //   点击的不是当前排序项:  更新orderFlag为指定的值, orderType更新为desc
+          flag = orderFlag
+          type = 'desc'
+        }
+        // 请求获取商品分页列表
+        this.options.order = flag + ':' + type
+        this.getShopList()
+      },
 
       /* 
       删除一个属性条件
