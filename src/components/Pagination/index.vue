@@ -3,8 +3,17 @@
     <button :disabled="myCurrentPage===1" :class="{disable: myCurrentPage===1}" @click="setCurrentPage(myCurrentPage-1)">上一页</button>
     <button v-if="startEnd.start!=1" @click="setCurrentPage(1)">1</button>
     <button class="disable" v-if="startEnd.start>2">...</button>
-    <button v-for="item in startEnd.end" v-if="item>=startEnd.start"
+    <!-- 
+      多执行了从1到start-1的v-for遍历和v-if的判断
+      <button v-for="item in startEnd.end" v-if="item>=startEnd.start"
+      :class="{active: item===myCurrentPage}" @click="setCurrentPage(item)">{{item}}</button> -->
+    <button v-for="item in startEndArr" 
       :class="{active: item===myCurrentPage}" @click="setCurrentPage(item)">{{item}}</button>
+    <!-- <div v-if="isShow">
+      <button v-for="item in startEnd.end" 
+      :class="{active: item===myCurrentPage}" @click="setCurrentPage(item)">{{item}}</button>
+    </div> -->
+    
     <!-- <button>4</button>
     <button class="active">5</button>
     <button>6</button>
@@ -45,7 +54,8 @@ export default {
 
   data () {
     return {
-      myCurrentPage: this.currentPage  // 初始值由父组件来指定
+      myCurrentPage: this.currentPage,  // 初始值由父组件来指定
+      isShow: true,
     }
   },
 
@@ -56,6 +66,18 @@ export default {
     totalPages () {
       const {total, pageSize} = this
       return Math.ceil(total/pageSize)
+    },
+
+    /* 
+    包含从start到end的数组
+    */
+    startEndArr () {
+      const arr = []
+      const {start, end} = this.startEnd
+      for (let page = start; page <=end; page++) {
+        arr.push(page)
+      }
+      return arr
     },
 
     /* 
