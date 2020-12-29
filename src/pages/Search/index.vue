@@ -108,8 +108,8 @@
             :currentPage="options.pageNo"
             :total="total"
             :pageSize="options.pageSize"
-            :showPageNo="3"
-            @currentChange="currentChange"
+            :showPageNo="5"
+            @currentChange="getShopList"
           />
         </div>
       </div>
@@ -186,10 +186,9 @@
       /* 
       当前页码发生改变的事件回调
       */
-      currentChange (page) {
-        this.options.pageNo = page
-        this.getShopList()
-      },
+      // currentChange (page) {
+      //   this.getShopList(page)
+      // },
 
       /* 
       设置新的排序搜索
@@ -327,7 +326,9 @@
       /* 
       异步获取商品列表
       */
-      getShopList () {
+      getShopList (page=1) {
+        // 更新options中的pageNo
+        this.options.pageNo = page
         // 发搜索的请求
         this.$store.dispatch('getProductList', this.options)
       }

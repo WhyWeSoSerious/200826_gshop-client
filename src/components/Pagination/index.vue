@@ -1,18 +1,19 @@
 <template>
   <div class="pagination">
-    <button>上一页</button>
-    <button>1</button>
-    <button class="disable">...</button>
-    <button>3</button>
-    <button>4</button>
+    <button :disabled="myCurrentPage===1" :class="{disable: myCurrentPage===1}" @click="setCurrentPage(myCurrentPage-1)">上一页</button>
+    <button v-if="startEnd.start!=1" @click="setCurrentPage(1)">1</button>
+    <button class="disable" v-if="startEnd.start>2">...</button>
+    <button v-for="item in startEnd.end" v-if="item>=startEnd.start"
+      :class="{active: item===myCurrentPage}" @click="setCurrentPage(item)">{{item}}</button>
+    <!-- <button>4</button>
     <button class="active">5</button>
     <button>6</button>
-    <button>7</button>
+    <button>7</button> -->
 
-    <button class="disable">...</button>
-    <button>12</button>
-    <button>下一页</button>
-    <button class="disable">共 35 条</button>
+    <button class="disable" v-if="startEnd.end<totalPages-1">...</button>
+    <button v-if="startEnd.end<totalPages" @click="setCurrentPage(totalPages)">{{totalPages}}</button>
+    <button :disabled="myCurrentPage===totalPages" :class="{disable: myCurrentPage===totalPages}" @click="setCurrentPage(myCurrentPage+1)">下一页</button>
+    <button class="disable">共 {{total}} 条</button>
   </div>
 </template>
 
@@ -117,6 +118,30 @@ export default {
       }
 
       return {start, end} 
+    }
+  },
+
+  watch: {
+    /* 
+    子组件监视父组件传入的数据变化
+    */
+    currentPage (value) {
+      this.myCurrentPage = value
+    }
+  },
+
+  methods: {
+    /* 
+    设置新的当前页码
+    */
+    setCurrentPage (page) {
+      // 如果页码没有变化, 直接结束
+      if (page===this.myCurrentPage) return
+      // 更新当前页码
+      this.myCurrentPage = page
+
+      // 分发自定义事件通知父组件
+      this.$emit('currentChange', page)
     }
   }
 }
