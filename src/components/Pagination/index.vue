@@ -7,7 +7,7 @@
       多执行了从1到start-1的v-for遍历和v-if的判断
       <button v-for="item in startEnd.end" v-if="item>=startEnd.start"
       :class="{active: item===myCurrentPage}" @click="setCurrentPage(item)">{{item}}</button> -->
-    <button v-for="item in startEndArr" 
+    <button v-for="item in startEndArr" :key="item"
       :class="{active: item===myCurrentPage}" @click="setCurrentPage(item)">{{item}}</button>
     <!-- <div v-if="isShow">
       <button v-for="item in startEnd.end" 
