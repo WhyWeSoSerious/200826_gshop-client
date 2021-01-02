@@ -4,9 +4,11 @@
 import home from './home'
 import user from './user'
 import search from './search'
+import detail from './detail'
+import addOrUpdataCarts from './addOrUpdataCart'
 
 export default {
   home,
   user,
-  search
+  search, detail, addOrUpdataCarts
 }

@@ -41,4 +41,18 @@ export const reqFloors = () => mockAjax('/floors')
 /api/list  POST
 
 */
-export const reqSearch = (searchParams) => ajax.post('/list', searchParams) 
+export const reqSearch = (searchParams) => ajax.post('/list', searchParams)
+//todo   详情页的
+export const reqDetailInfo = (skuId) => {
+  return ajax({
+    url: `/item/${skuId}`,
+    method: 'get'
+  })
+}
+//todo发送添加购物车
+export const reqAddOrUpdataCart = (skuId, skuNum) => {
+  return ajax({
+    url: `/cart/addToCart/${skuId}/${skuNum}`,
+    method: 'post'
+  })
+}

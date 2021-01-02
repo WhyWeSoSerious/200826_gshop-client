@@ -80,9 +80,9 @@
               <li class="yui3-u-1-5" v-for="item in goodsList" :key="item.id">
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="javascript:">
+                    <router-link :to="'/detail/'+ item.id">
                       <img :src="item.defaultImg" />
-                    </a>
+                    </router-link>
                   </div>
                   <div class="price">
                     <strong>
@@ -91,7 +91,7 @@
                     </strong>
                   </div>
                   <div class="attr">
-                    <a href="javascript:" >{{item.title}}</a>
+                    <router-link :to="'/detail/'+ item.id">{{item.title}}</router-link>
                   </div>
                   <div class="commit">
                     <i class="command">已有<span>2000</span>人评价</i>
@@ -138,7 +138,7 @@
           order: '2:asc', // 排序方式 1: 综合,2: 价格 asc: 升序,desc: 降序 示例: "1:desc"
         
           pageNo: 1, // 页码
-          pageSize: 3, // 每页数量
+          pageSize: 8, // 每页数量
         }
       }
     },
